@@ -12,23 +12,40 @@ class MoviesDatabaseApiService
       "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com"
   }
   
-    result = HTTParty.get("https://moviesdatabase.p.rapidapi.com/titles/series/#{@imdb_id}", headers: headers)
+    resp = HTTParty.get("https://moviesdatabase.p.rapidapi.com/titles/series/#{@imdb_id}", headers: headers)
   rescue HTTParty::Error => e
     OpenStruct.new({success?: false, error: e})
   else
-    # results = json.loads(resp.text)['results']
-    # season_episodes = {}
-    # for result in results:
-    #     if not result['seasonNumber'] in season_episodes:
-    #         print('Working on season:', result['seasonNumber'])
-    #         season_episodes[result['seasonNumber']] = []
-    #     print('episode', result['episodeNumber'])
-    #     season_episodes[result['seasonNumber']].append(get_rating(result['tconst']))
-    # return season_episodes
-    OpenStruct.new({success?: true, payload: result})
+    results = resp['results']
+    season_episodes = {}
+    results.each do |result|
+      unless season_episodes.key?(result['seasonNumber'])
+        season_episodes[result['seasonNumber']] = []
+      end
+      season_episodes[result['seasonNumber']] << (get_rating(result['tconst']))
+    end
+
+    OpenStruct.new({success?: true, payload: season_episodes})
   end
 
   private
+
+    def get_rating(imdb_id)
+      url = "https://moviesdatabase.p.rapidapi.com/titles/#{imdb_id}/ratings"
+      headers = {
+          "X-RapidAPI-Key": movies_database_api_key,
+          "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com"
+      }
+
+      resp = HTTParty.get(url, headers: headers)
+      
+      rescue HTTParty::Error => e
+        OpenStruct.new({success?: false, error: e})
+      else
+        resp['results']['averageRating']
+      
+
+    end
 
     def movies_database_api_key
       ENV['MOVIES_DATABASE_API_KEY']
