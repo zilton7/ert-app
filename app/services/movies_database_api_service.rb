@@ -6,7 +6,7 @@ class MoviesDatabaseApiService
     @imdb_id   = params[:imdb_id]
   end
 
-  def call
+  def get_seasons_episodes_ratings
     headers = {
       "X-RapidAPI-Key": movies_database_api_key,
       "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com"
