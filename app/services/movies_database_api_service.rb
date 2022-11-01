@@ -42,7 +42,7 @@ class MoviesDatabaseApiService
       rescue HTTParty::Error => e
         OpenStruct.new({success?: false, error: e})
       else
-        resp['results']['averageRating']
+        resp.try(:[],'results').try(:[], 'averageRating')
       
 
     end
