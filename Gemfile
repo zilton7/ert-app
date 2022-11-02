@@ -51,3 +51,5 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem "httparty", "~> 0.20.0"
 
 gem "simple_form", "~> 5.1"
+
+gem "ransack", "~> 3.2"

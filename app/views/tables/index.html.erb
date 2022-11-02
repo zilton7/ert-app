@@ -3,7 +3,7 @@
         <div>
             <h2>Search</h2>
             <%= form_tag tables_path, method: 'GET' do %>
-                <%= text_field_tag :search, params[:search] %>
+                <%= text_field_tag :search, params[:search], id: 'search' %>
                 <%= submit_tag 'Search' %>
             <% end %>
         </div>
@@ -14,3 +14,14 @@
         </div>
     </div>
 </div>
+
+<script>
+// let options = {
+
+//   url: "location_to_file.json",
+
+//   getValue: "title"
+// };
+
+// $("#search").easyAutocomplete(options);
+</script>
