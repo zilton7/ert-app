@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   resources :home, only: [:index]
-  resources :tables, only: :index
+  resources :tables, only: [:index, :show]
 
-  get :table, to: 'tables#show'
+  # get :table, to: 'tables#show'
   get :search, controller: 'home'
 end
