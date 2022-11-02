@@ -1,9 +1,14 @@
 class TablesController < ApplicationController
   include CreateFromApiData
 
+  def index
+    @show_data = Show.search(params[:search])
+  end
+
   def show
-    q = params[:query]&.downcase
-    @show_data = Show.where("title ilike ?", "%#{q}%").first
+    # q = params[:query]&.downcase
+    # @show_data = Show.where("title ilike ?", "%#{q}%").first
+    @show_data = Show.search(params[:search])
 
     unless @show_data
       show_data = MovieDatabaseAlternativeApiService.new({query: params[:query]}).get_imdb_id
@@ -15,9 +20,9 @@ class TablesController < ApplicationController
     end
   end
 
-  # private
+  private
 
-  #   def table_params
-  #     params.fetch(:table, {}).permit(:query)
-  #   end
+    def table_params
+      params.fetch(:table, {}).permit(:search)
+    end
 end

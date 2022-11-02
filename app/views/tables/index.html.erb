@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="d-flex flex-column text-center justify-content-center table-responsive">
+        <div>
+            <h2>Search</h2>
+            <%= form_tag tables_path, method: 'GET' do %>
+                <%= text_field_tag :search, params[:search] %>
+                <%= submit_tag 'Search' %>
+            <% end %>
+        </div>
+        <div>
+            <% @show_data.each do |show| %>
+                <%= show.title %>
+            <% end %>
+        </div>
+    </div>
+</div>
