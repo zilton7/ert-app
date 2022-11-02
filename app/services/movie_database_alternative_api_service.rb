@@ -17,7 +17,13 @@ class MovieDatabaseAlternativeApiService
   rescue HTTParty::Error => e
     OpenStruct.new({success?: false, error: e})
   else
-    { title: resp['Search'][0]['Title'], imdb_id: resp['Search'][0]['imdbID'] }
+    results = resp.try(:[], 'Search').try(:[], 0)
+  
+    return unless results
+
+    title = results.try(:[], 'Title')
+    imdb_id = results.try(:[], 'imdbID')
+    { title: title, imdb_id: imdb_id }
   end
 
   private

@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   resources :tables, only: [:index, :show]
 
   # get :table, to: 'tables#show'
-  get :search, controller: 'home'
+  get :search, controller: 'tables'
 end
