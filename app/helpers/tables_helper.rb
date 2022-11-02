@@ -2,7 +2,7 @@ module TablesHelper
   def generate_table(data)
     seasons = {}
     data.seasons.each do |s|
-      seasons[s.number] = s.episodes.map{|e| e.imdb_rating}
+      seasons[s.number] = s.episodes.map{|e| { imdb_rating: e.imdb_rating, imdb_id: e.imdb_id } }
     end
 
     longest = seasons.values.max_by(&:length).length
@@ -16,9 +16,10 @@ module TablesHelper
     range.each do |i|
       row = ["<th style='color: white; background-color: black; text-align: center;'>#{i}</th>"]
       seasons.keys.each do |key|
-        rating = seasons[key][i-1]
-        if rating
-          td = "<td style='#{highlight_cell(rating)}'>#{rating}</td>"
+        imdb_rating = seasons[key][i-1].try(:[], :imdb_rating)
+        imdb_id = seasons[key][i-1].try(:[], :imdb_id)
+        if imdb_rating
+          td = "<td style='#{highlight_cell(imdb_rating)} cursor: pointer;' onclick=#{generate_onclick(imdb_id)}>#{imdb_rating}</t=></td>"
         else
           td = "<td></td>"
         end
@@ -46,5 +47,9 @@ module TablesHelper
     end
 
     "text-align: center; background-color: #{color};"
+  end
+
+  def generate_onclick(imdb_id)
+    "window.open('https://www.imdb.com/title/#{imdb_id}/')"
   end
 end

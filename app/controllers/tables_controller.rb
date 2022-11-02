@@ -1,9 +1,9 @@
 class TablesController < ApplicationController
-  include TablesHelper
+  include CreateFromApiData
 
   def show
-    name = params[:query]&.downcase
-    @show_data = Show.where("title ilike ?", "%#{name}%").first
+    q = params[:query]&.downcase
+    @show_data = Show.where("title ilike ?", "%#{q}%").first
 
     unless @show_data
       show_data = MovieDatabaseAlternativeApiService.new({query: params[:query]}).get_imdb_id

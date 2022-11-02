@@ -22,7 +22,7 @@ class MoviesDatabaseApiService
       unless season_episodes.key?(result['seasonNumber'])
         season_episodes[result['seasonNumber']] = []
       end
-      season_episodes[result['seasonNumber']] << (get_rating(result['tconst']))
+      season_episodes[result['seasonNumber']] << (get_rating_and_imdb_id(result['tconst']))
     end
 
     OpenStruct.new({success?: true, payload: season_episodes})
@@ -30,7 +30,7 @@ class MoviesDatabaseApiService
 
   private
 
-    def get_rating(imdb_id)
+    def get_rating_and_imdb_id(imdb_id)
       url = "https://moviesdatabase.p.rapidapi.com/titles/#{imdb_id}/ratings"
       headers = {
           "X-RapidAPI-Key": movies_database_api_key,
@@ -42,7 +42,9 @@ class MoviesDatabaseApiService
       rescue HTTParty::Error => e
         OpenStruct.new({success?: false, error: e})
       else
-        resp.try(:[],'results').try(:[], 'averageRating')
+        imdb_rating = resp.try(:[],'results').try(:[], 'averageRating')
+        imdb_id = resp.try(:[],'results').try(:[], 'tconst')
+        { imdb_rating: imdb_rating, imdb_id: imdb_id }
       
 
     end
