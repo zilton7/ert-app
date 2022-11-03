@@ -3,9 +3,29 @@ class MovieDatabaseAlternativeApiService
 
   def initialize(params)
     @query   = params[:query]
+    p @query
   end
 
   def get_imdb_id
+    headers = {
+      "X-RapidAPI-Key": movies_database_api_key,
+      "X-RapidAPI-Host": "movie-database-alternative.p.rapidapi.com"
+    }
+  
+    resp = HTTParty.get("https://movie-database-alternative.p.rapidapi.com/?s=#{@query}&r=json&page=1")
+  rescue HTTParty::Error => e
+    OpenStruct.new({success?: false, error: e})
+  else
+    results = resp.try(:[], 'Search').try(:[], 0)
+  
+    return unless results
+
+    title = results.try(:[], 'Title')
+    imdb_id = results.try(:[], 'imdbID')
+    { title: title, imdb_id: imdb_id }
+  end
+
+  def get_results
     headers = {
       "X-RapidAPI-Key": movies_database_api_key,
       "X-RapidAPI-Host": "movie-database-alternative.p.rapidapi.com"
@@ -17,13 +37,8 @@ class MovieDatabaseAlternativeApiService
   rescue HTTParty::Error => e
     OpenStruct.new({success?: false, error: e})
   else
-    results = resp.try(:[], 'Search').try(:[], 0)
-  
-    return unless results
-
-    title = results.try(:[], 'Title')
-    imdb_id = results.try(:[], 'imdbID')
-    { title: title, imdb_id: imdb_id }
+    results = resp['Search'].map{ |i|  i['Type'] == 'series' ? { title: i['Title'], year: i['Year'], imdb_id: i['imdbID'] } : nil }.compact
+    OpenStruct.new({success?: true, results: results})
   end
 
   private

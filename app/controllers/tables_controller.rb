@@ -5,13 +5,12 @@ class TablesController < ApplicationController
     query = params[:search]
     @shows = Show.ransack(title_cont: query).result(distinct: true)
 
-    unless @shows
-      if query&.length > 1
-        show_data = MovieDatabaseAlternativeApiService.new({query: params[:query]}).get_imdb_id
-        return unless show_data
-        ratings_data = MoviesDatabaseApiService.new({imdb_id: show_data[:imdb_id]}).get_seasons_episodes_ratings
-      
-        @shows = create_from_api_data(show_data, ratings_data)
+    unless @shows.any?
+      if query
+        @shows = MovieDatabaseAlternativeApiService.new({query: query}).get_results.results
+        # return unless show_data
+        # ratings_data = MoviesDatabaseApiService.new({imdb_id: show_data[:imdb_id]}).get_seasons_episodes_ratings
+        # @shows = create_from_api_data(show_data, ratings_data)
       else
         @shows = []
       end
