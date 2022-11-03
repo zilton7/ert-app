@@ -6,7 +6,9 @@
     <div class="d-flex flex-column text-center justify-content-center table-responsive">
         <div>
             <% @shows.each do |show| %>
-                <%= show[:id] ? link_to(show[:title], table_path(show)) : link_to("Build table for '#{show[:title]} (#{show[:year]})'", build_path(title: show[:title], imdb_id: show[:imdb_id])) %>
+                <div>
+                 <%= show[:id] ? link_to(show.full_title, table_path(show)) : link_to("Build table for '#{show[:title]} (#{show[:year]})'", build_path(title: show[:title], imdb_id: show[:imdb_id], year: show[:year])) %>
+                </div>
             <% end %>
         </div>
     </div>

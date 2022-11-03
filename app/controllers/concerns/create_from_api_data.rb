@@ -1,6 +1,6 @@
 module CreateFromApiData
   def create_from_api_data(show, ratings)
-    show = Show.find_or_create_by(title: show[:title], imdb_id: show[:imdb_id])
+    show = Show.find_or_create_by(title: show[:title], imdb_id: show[:imdb_id], year: show[:year])
     show_data = ratings.payload
     
     show_data.each do |season, episodes|
