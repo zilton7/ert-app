@@ -7,4 +7,5 @@ Rails.application.routes.draw do
 
   # get :table, to: 'tables#show'
   get :search, controller: 'tables'
+  get :build, controller: :tables
 end
