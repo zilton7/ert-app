@@ -4,14 +4,7 @@ class TablesController < ApplicationController
   def index
     query = params[:search]
     @shows = Show.ransack(title_cont: query).result(distinct: true)
-    
-    unless @shows.any?
-      if query
-        @shows = MovieDatabaseAlternativeApiService.new({query: query}).get_results.results
-      end
-    else
-      @shows
-    end
+    @api_shows = MovieDatabaseAlternativeApiService.new({query: query}).get_results.results
   end
 
   def show

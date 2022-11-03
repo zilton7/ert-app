@@ -5,10 +5,21 @@
 
     <div class="d-flex flex-column text-center justify-content-center table-responsive">
         <div>
+            <% if @shows.any? %>
+                <h3>Available Tables</h3>
+            <% end %>
             <% @shows.each do |show| %>
                 <div>
-                 <%= show[:id] ? link_to(show.full_title, table_path(show)) : link_to("Build table for '#{show[:title]} (#{show[:year]})'", build_path(title: show[:title], imdb_id: show[:imdb_id], year: show[:year])) %>
+                 <%= link_to(show.full_title, table_path(show)) %>
                 </div>
+            <% end %>
+            <% if params[:search] %>
+                <h3>Tables to Build</h3>
+                <% @api_shows&.each do |api_show| %>
+                    <div>
+                        <%= link_to("Build table for '#{api_show[:title]} (#{api_show[:year]})'", build_path(title: api_show[:title], imdb_id: api_show[:imdb_id], year: api_show[:year])) %>
+                    </div>
+                <% end %>
             <% end %>
         </div>
     </div>

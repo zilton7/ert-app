@@ -37,7 +37,8 @@ class MovieDatabaseAlternativeApiService
   rescue HTTParty::Error => e
     OpenStruct.new({success?: false, error: e})
   else
-    results = resp['Search'].map{ |i|  i['Type'] == 'series' ? { title: i['Title'], year: i['Year'], imdb_id: i['imdbID'] } : nil }.compact
+    results = resp.try(:[], 'Search')&.map{ |i|  i['Type'] == 'series' ? { title: i['Title'], year: i['Year'], imdb_id: i['imdbID'] } : nil }&.compact
+    results = results&.reject { |i| i if Show.find_by_imdb_id(i[:imdb_id]).present? }  # remove shows that are already stored in db
     OpenStruct.new({success?: true, results: results})
   end
 
