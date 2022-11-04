@@ -52,4 +52,8 @@ module TablesHelper
   def generate_onclick(imdb_id)
     "window.open('https://www.imdb.com/title/#{imdb_id}/')"
   end
+
+  def build_table_link(api_show)
+    link_to("Build for '#{api_show[:title]} (#{api_show[:year]})'", build_path(title: api_show[:title], imdb_id: api_show[:imdb_id], year: api_show[:year]))
+  end
 end

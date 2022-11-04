@@ -16,11 +16,19 @@ class TablesController < ApplicationController
     imdb_id = params[:imdb_id]
     year = params[:year]
     show_data = { title: title, imdb_id: imdb_id, year: year }
-    ratings_data = MoviesDatabaseApiService.new({ imdb_id: show_data[:imdb_id] }).get_seasons_episodes_ratings
-    @show = create_from_api_data(show_data, ratings_data)
+
+    @show = Show.find_by_imdb_id(imdb_id)
     if @show.present?
-      redirect_to table_path(@show)
+      redirect_to table_path(@show), notice: 'Oops, it already built!'
+      return
+    else
+      ratings_data = MoviesDatabaseApiService.new({ imdb_id: show_data[:imdb_id] }).get_seasons_episodes_ratings
+      @show = create_from_api_data(show_data, ratings_data)
+      if @show.present?
+        redirect_to table_path(@show), notice: 'Table was built successfully!'
+      end
     end
+
   end
 
   def search
