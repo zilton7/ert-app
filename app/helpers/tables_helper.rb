@@ -10,16 +10,16 @@ module TablesHelper
 
     table = []
 
-    top_row = seasons.keys.map{ |s| "<th  style='color: white; background-color: black; text-align: center;'>" + s.to_s + '</th>' }
+    top_row = seasons.keys.map{ |s| "<th  style='color: white; background-color: black; text-align: center;' title='season #{s.to_s}'>" + s.to_s + '</th>' }
     table.append('<thead><th style="color: white; background-color: black; text-align: center;"></th>' + top_row.join('') + '</thead>')
 
     range.each do |i|
-      row = ["<th style='color: white; background-color: black; text-align: center;'>#{i}</th>"]
+      row = ["<th style='color: white; background-color: black; text-align: center;' title='episode #{i}'>#{i}</th>"]
       seasons.keys.each do |key|
         imdb_rating = seasons[key][i-1].try(:[], :imdb_rating)
         imdb_id = seasons[key][i-1].try(:[], :imdb_id)
         if imdb_rating
-          td = "<td style='#{highlight_cell(imdb_rating)} cursor: pointer;' onclick=#{generate_onclick(imdb_id)}>#{imdb_rating}</t=></td>"
+          td = "<td style='#{highlight_cell(imdb_rating)} cursor: pointer;' onclick=#{generate_onclick(imdb_id)} title='season #{key} episode #{i}'>#{imdb_rating}</t=></td>"
         else
           td = "<td></td>"
         end
