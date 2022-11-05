@@ -1,5 +1,5 @@
 // Hide notice
-$(function () {
+$(document).ready(() => {
   setTimeout(function () {
     $("#notice_wrapper").fadeOut("slow", function () {
       $(this).remove();
