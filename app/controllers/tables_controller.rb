@@ -3,7 +3,7 @@ class TablesController < ApplicationController
 
   def index
     query = params[:search]
-    @shows = Show.ransack(title_cont: query).result(distinct: true)
+    @pagy, @shows = pagy(Show.ransack(title_cont: query).result(distinct: true))
     @api_shows = MovieDatabaseAlternativeApiService.new({query: query}).get_results.results
   end
 
